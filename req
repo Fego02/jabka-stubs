@@ -1,0 +1,14 @@
+{
+    "name": "GET with text body",
+    "request": {
+        "method": "GET",
+        "url": "/messages/greeting"
+    },
+    "response": {
+        "status": 201,
+        "body": "Hello, World!",
+        "headers": {
+            "Content-Type": "text/plain"
+        }
+    }
+}
