@@ -76,13 +76,14 @@ func (stubs *Stubs) Get(requestString *string) *Stub {
 
 func main() {
 	port := flag.String("port", "8080", "port to listen on")
+	address := flag.String("address", "127.0.0.1", "address to bind to")
 	flag.Parse()
 	stubs := NewStubs()
 	http.Handle("/generate", &generateHandler{stubsPtr: stubs})
 	http.Handle("/", &stubHandler{stubsPtr: stubs})
 
-	fmt.Printf("Server listening on port %s", *port)
-	log.Fatal(http.ListenAndServe(":"+*port, nil))
+	fmt.Printf("Server listening on %s:%s", *address, *port)
+	log.Fatal(http.ListenAndServe(*address+":"+*port, nil))
 }
 
 type generateHandler struct {
@@ -107,7 +108,7 @@ func (h *generateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.stubsPtr.Add(stub)
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, "Mock created successfully for %s on %s\n", stub.Name,
+	fmt.Fprintf(w, "Stub created successfully for %s on %s\n", stub.Name,
 		stub.Request.URL)
 }
 
@@ -145,11 +146,11 @@ func parseRequestString(r *http.Request) (*string, error) {
 	//        request.Cookie += cookie.String() + "; "
 	//    }
 
-	//requestBodyPtr, err := parseRequestBody(r)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//request.Body = *requestBodyPtr
+	requestBodyPtr, err := parseRequestBody(r)
+	if err != nil {
+		return nil, err
+	}
+	request.Body = *requestBodyPtr
 
 	requestByte, _ := json.Marshal(request)
 	requestString := string(requestByte)
@@ -158,11 +159,6 @@ func parseRequestString(r *http.Request) (*string, error) {
 }
 
 func (h *stubHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	// Наименование функций бы поменять
 	requestString, err := parseRequestString(r)
 	if err != nil {
