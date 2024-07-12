@@ -1,0 +1,106 @@
+2024-07-12 12:16:32,957 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2024-07-12 12:16:32,967 INFO o.a.j.JMeter: Loading user properties from: user.properties
+2024-07-12 12:16:32,967 INFO o.a.j.JMeter: Loading system properties from: system.properties
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: Version 5.6.3
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: java.version=1.8.0_411
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) Client VM
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: os.name=Windows 10
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: os.arch=x86
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: os.version=10.0
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: file.encoding=Cp1251
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: java.awt.headless=null
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: Max memory     =1073741824
+2024-07-12 12:16:32,972 INFO o.a.j.JMeter: Available Processors =6
+2024-07-12 12:16:32,975 INFO o.a.j.JMeter: Default Locale=English (EN)
+2024-07-12 12:16:32,975 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2024-07-12 12:16:32,975 INFO o.a.j.JMeter: JMeterHome=D:\Stub\jabka-stubs\testing\JMeter
+2024-07-12 12:16:32,975 INFO o.a.j.JMeter: user.dir  =D:\Stub\jabka-stubs\testing\JMeter\bin
+2024-07-12 12:16:32,975 INFO o.a.j.JMeter: PWD       =D:\Stub\jabka-stubs\testing\JMeter\bin
+2024-07-12 12:16:37,511 INFO o.a.j.JMeter: IP: 26.200.169.122 Name: DESKTOP-0J3Q6LT FullName: DESKTOP-0J3Q6LT
+2024-07-12 12:16:37,527 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2024-07-12 12:16:37,662 INFO o.a.j.JMeterGuiLauncher: Setting LAF to: com.github.weisj.darklaf.DarkLaf:com.github.weisj.darklaf.theme.DarculaTheme
+2024-07-12 12:16:39,539 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-casutg-2.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.gui.action.Command], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:16:39,554 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-manager-1.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.gui.action.Command], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:16:40,555 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-casutg-2.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.gui.plugin.MenuCreator], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:16:40,557 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-manager-1.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.gui.plugin.MenuCreator], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:16:41,083 INFO o.j.r.JARSourceHTTP: Found cached repo
+2024-07-12 12:16:41,332 INFO o.j.r.PluginManager: Plugins Status: [jpgc-casutg=2.10, jpgc-plugins-manager=1.10, jmeter-core=5.6.3, jmeter-ftp=5.6.3, jmeter-http=5.6.3, jmeter-jdbc=5.6.3, jmeter-jms=5.6.3, jmeter-junit=5.6.3, jmeter-java=5.6.3, jmeter-ldap=5.6.3, jmeter-mail=5.6.3, jmeter-mongodb=5.6.3, jmeter-native=5.6.3, jmeter-tcp=5.6.3, jmeter-components=5.6.3]
+2024-07-12 12:19:03,189 INFO o.a.j.s.FileServer: Default base='D:\Stub\jabka-stubs\testing\JMeter\bin'
+2024-07-12 12:19:03,191 INFO o.a.j.g.a.Load: Loading file: D:\Stub\jabka-stubs\testing\JMeterTests\HTTP Request.jmx
+2024-07-12 12:19:03,191 INFO o.a.j.s.FileServer: Set new base='D:\Stub\jabka-stubs\testing\JMeterTests'
+2024-07-12 12:19:03,353 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2024-07-12 12:19:03,375 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2024-07-12 12:19:03,376 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2024-07-12 12:19:03,378 INFO o.a.j.s.SaveService: Loading file: D:\Stub\jabka-stubs\testing\JMeterTests\HTTP Request.jmx
+2024-07-12 12:19:03,520 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-07-12 12:19:03,520 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-07-12 12:19:03,520 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-07-12 12:19:03,520 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-07-12 12:19:03,520 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2024-07-12 12:19:03,520 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2024-07-12 12:19:04,572 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2024-07-12 12:19:04,572 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2024-07-12 12:19:04,572 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2024-07-12 12:19:04,572 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2024-07-12 12:19:04,693 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-casutg-2.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.visualizers.ResultRenderer], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:19:04,695 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-manager-1.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.visualizers.ResultRenderer], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:19:04,711 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-casutg-2.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.visualizers.RequestView], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:19:04,713 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-manager-1.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.visualizers.RequestView], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:19:04,799 INFO o.a.j.s.FileServer: Set new base='D:\Stub\jabka-stubs\testing\JMeterTests'
+2024-07-12 12:19:23,215 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2024-07-12 12:19:23,215 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2024-07-12 12:19:23,451 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-casutg-2.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.functions.Function], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:19:23,453 INFO o.a.j.r.ClassFinder: Will scan jar D:\Stub\jabka-stubs\testing\JMeter\lib\ext\jmeter-plugins-manager-1.10.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.functions.Function], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2024-07-12 12:19:32,605 ERROR o.a.j.JMeter: Uncaught exception in thread Thread[AWT-EventQueue-0,6,main]
+java.lang.NullPointerException: null
+	at com.github.weisj.darklaf.ui.tree.DarkTreeExpansionAnimationListener$TreeStateAnimator.repaint(DarkTreeExpansionAnimationListener.java:102) ~[darklaf-core-2.7.3.jar:2.7.3]
+	at com.github.weisj.darklaf.ui.tree.DarkTreeExpansionAnimationListener$TreeStateAnimator.paintNow(DarkTreeExpansionAnimationListener.java:111) ~[darklaf-core-2.7.3.jar:2.7.3]
+	at com.github.weisj.darklaf.graphics.Animator.paint(Animator.java:183) ~[darklaf-core-2.7.3.jar:2.7.3]
+	at com.github.weisj.darklaf.graphics.Animator.onTick(Animator.java:219) ~[darklaf-core-2.7.3.jar:2.7.3]
+	at com.github.weisj.darklaf.graphics.Animator.access$000(Animator.java:36) ~[darklaf-core-2.7.3.jar:2.7.3]
+	at com.github.weisj.darklaf.graphics.Animator$1.lambda$run$0(Animator.java:172) ~[darklaf-core-2.7.3.jar:2.7.3]
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source) ~[?:1.8.0_411]
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source) ~[?:1.8.0_411]
+	at java.awt.EventQueue.access$500(Unknown Source) ~[?:1.8.0_411]
+	at java.awt.EventQueue$3.run(Unknown Source) ~[?:1.8.0_411]
+	at java.awt.EventQueue$3.run(Unknown Source) ~[?:1.8.0_411]
+	at java.security.AccessController.doPrivileged(Native Method) ~[?:1.8.0_411]
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source) ~[?:1.8.0_411]
+	at java.awt.EventQueue.dispatchEvent(Unknown Source) ~[?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.run(Unknown Source) [?:1.8.0_411]
+2024-07-12 12:32:10,664 INFO o.a.j.s.FileServer: Set new base='D:\Stub\jabka-stubs\testing\JMeterTests\POST_stub_10000'
+2024-07-12 12:32:10,666 ERROR o.a.j.g.a.Save: Error saving tree.
+java.io.FileNotFoundException: D:\Stub\jabka-stubs\testing\JMeterTests\POST_stub_10000\100.jmx (Системе не удается найти указанный путь)
+	at java.io.FileOutputStream.open0(Native Method) ~[?:1.8.0_411]
+	at java.io.FileOutputStream.open(Unknown Source) ~[?:1.8.0_411]
+	at java.io.FileOutputStream.<init>(Unknown Source) ~[?:1.8.0_411]
+	at java.io.FileOutputStream.<init>(Unknown Source) ~[?:1.8.0_411]
+	at org.apache.jmeter.gui.action.Save.backupAndSave(Save.java:261) ~[ApacheJMeter_core.jar:5.6.3]
+	at org.apache.jmeter.gui.action.Save.doAction(Save.java:176) ~[ApacheJMeter_core.jar:5.6.3]
+	at org.apache.jmeter.gui.action.ActionRouter.performAction(ActionRouter.java:83) ~[ApacheJMeter_core.jar:5.6.3]
+	at org.apache.jmeter.gui.action.ActionRouter.lambda$actionPerformed$0(ActionRouter.java:65) ~[ApacheJMeter_core.jar:5.6.3]
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventQueue.access$500(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventQueue$3.run(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventQueue$3.run(Unknown Source) [?:1.8.0_411]
+	at java.security.AccessController.doPrivileged(Native Method) ~[?:1.8.0_411]
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventQueue.dispatchEvent(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source) [?:1.8.0_411]
+	at java.awt.EventDispatchThread.run(Unknown Source) [?:1.8.0_411]
+2024-07-12 12:32:10,666 ERROR o.a.j.u.JMeterUtils: Couldn't save test plan to file: D:\Stub\jabka-stubs\testing\JMeterTests\POST_stub_10000\100.jmx
+D:\Stub\jabka-stubs\testing\JMeterTests\POST_stub_10000\100.jmx (Системе не удается найти указанный путь)
+2024-07-12 12:32:28,582 INFO o.a.j.s.FileServer: Set new base='D:\Stub\jabka-stubs\testing\JMeterTests'
+2024-07-12 12:33:31,693 INFO o.a.j.s.FileServer: Set new base='D:\Stub\jabka-stubs\testing\JMeterTests'
+2024-07-12 12:34:20,175 INFO o.a.j.s.FileServer: Set new base='D:\Stub\jabka-stubs\testing\JMeterTests'

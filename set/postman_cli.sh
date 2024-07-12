@@ -1,0 +1,3 @@
+sudo apt install curl
+curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+postman login --with-api-key ...

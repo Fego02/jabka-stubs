@@ -1,0 +1,1 @@
+..\JMeter\bin\jmeter.bat -n -t .\POST_stub_10000-100.jmx -l log-10000-100.jtl -e -o .\RESULT-10000-100\

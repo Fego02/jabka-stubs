@@ -145,11 +145,11 @@ func parseRequestString(r *http.Request) (*string, error) {
 	//        request.Cookie += cookie.String() + "; "
 	//    }
 
-	//requestBodyPtr, err := parseRequestBody(r)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//request.Body = *requestBodyPtr
+	requestBodyPtr, err := parseRequestBody(r)
+	if err != nil {
+		return nil, err
+	}
+	request.Body = *requestBodyPtr
 
 	requestByte, _ := json.Marshal(request)
 	requestString := string(requestByte)
@@ -158,10 +158,10 @@ func parseRequestString(r *http.Request) (*string, error) {
 }
 
 func (h *stubHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+	//if r.Method != http.MethodGet {
+	//	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	//	return
+	//}
 
 	// Наименование функций бы поменять
 	requestString, err := parseRequestString(r)
