@@ -54,6 +54,13 @@ func NewStubs() *Stubs {
 func (stubs *Stubs) Add(stub *Stub) {
 	stubs.Mutex.Lock()
 	defer stubs.Mutex.Unlock()
+
+	for index, item := range stubs.Items {
+		if item.Name == stub.Name {
+			stubs.Items[index] = stub
+			return
+		}
+	}
 	stubs.Items = append(stubs.Items, stub)
 }
 
