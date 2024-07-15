@@ -8,58 +8,86 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 	"sync"
 )
 
 type Stub struct {
-	Name     string       `json:"name"`
-	Request  StubRequest  `json:"request"`
-	Response StubResponse `json:"response"`
+	Name       string         `json:"name"`
+	Request    StubRequest    `json:"request"`
+	Response   StubResponse   `json:"response"`
+	Properties StubProperties `json:"properties"`
 }
 
 type StubRequest struct {
-	Method  string            `json:"method"`
-	URL     string            `json:"url"`
-	Body    string            `json:"body"`
-	Cookie  string            `json:"cookie"`
-	Headers map[string]string `json:"headers"`
+	Method     string            `json:"method"`
+	URL        string            `json:"url"`
+	Body       string            `json:"body"`
+	Headers    map[string]string `json:"headers"`
+	BodyBinary []byte
 }
 
 type StubResponse struct {
-	Status  int               `json:"status"`
-	Body    string            `json:"body"`
-	Headers map[string]string `json:"headers"`
+	Status     int               `json:"status"`
+	Body       string            `json:"body"`
+	Headers    map[string]string `json:"headers"`
+	BodyBinary []byte
+}
+
+type StubProperties struct {
+	IsLoggingEnabled bool `json:"is_logging_enabled"`
+	Delay            int  `json:"delay"`
 }
 
 type Stubs struct {
-	Map   map[string]*Stub
+	Items []*Stub
 	Mutex sync.RWMutex
 }
 
 func NewStubs() *Stubs {
 	return &Stubs{
-		Map: make(map[string]*Stub),
+		Items: make([]*Stub, 0, 10),
 	}
 }
 
 func (stubs *Stubs) Add(stub *Stub) {
-	// Стоит ли сделать проверку на обратное преобразование в json строку?
-	// Или же таскать его за собой, но это избыток данных
-	request, _ := json.Marshal(stub.Request)
-	requestString := string(request)
 	stubs.Mutex.Lock()
 	defer stubs.Mutex.Unlock()
-	stubs.Map[requestString] = stub
+	stubs.Items = append(stubs.Items, stub)
 }
 
-func (stubs *Stubs) Get(requestString *string) *Stub {
+func (stubs *Stubs) Get(stubRequest *StubRequest) []*Stub {
 	stubs.Mutex.RLock()
 	defer stubs.Mutex.RUnlock()
-	stub, ok := stubs.Map[*requestString]
-	if !ok {
-		return nil
+
+	resultSlice := make([]*Stub, 0, 10)
+
+	for _, stub := range stubs.Items {
+		if stub.Request.URL == stubRequest.URL && stub.Request.Method == stubRequest.Method {
+			if stub.Request.BodyBinary == nil || bytes.Equal(stub.Request.BodyBinary, stubRequest.BodyBinary) {
+				if areHeadersMatched(stubRequest.Headers, stub.Request.Headers) {
+					resultSlice = append(resultSlice, stub)
+				}
+			}
+		}
 	}
-	return stub
+
+	return resultSlice
+}
+
+func areHeadersMatched(requestHeaders map[string]string, stubHeaders map[string]string) bool {
+	for stubHeaderKey, stubHeaderValue := range stubHeaders {
+		requestHeaderValue, ok := requestHeaders[stubHeaderKey]
+		if !ok {
+			return false
+		}
+
+		if stubHeaderValue != requestHeaderValue {
+			return false
+		}
+	}
+	return true
 }
 
 // TODO Проверка на валидность порта
@@ -95,88 +123,208 @@ func (h *generateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
+	contentType := r.Header.Get("Content-Type")
+	if !strings.HasPrefix(contentType, "multipart/form-data") && contentType != "application/json" {
+		http.Error(w, "Invalid Content Type", http.StatusBadRequest)
+		return
+	}
+	var err error
+	var stubData io.Reader = r.Body
 	// TODO валидация данных запроса
 	// Стоит отделить указатели от полноценных записей припиской Ptr
 	stub := new(Stub)
-	err := json.NewDecoder(r.Body).Decode(stub)
+	stub.Request.Body = "NULL"
+	stub.Response.Body = "NULL"
+
+	if strings.HasPrefix(contentType, "multipart/form-data") {
+		err = r.ParseMultipartForm(10 << 20)
+		if err != nil {
+			http.Error(w, "Invalid multipart", http.StatusBadRequest)
+			return
+		}
+		stubDataFileHeader, ok := r.MultipartForm.File["stub-data"]
+
+		if !ok || len(stubDataFileHeader) == 0 {
+			http.Error(w, "Stub data not found", http.StatusBadRequest)
+			return
+		}
+
+		stubDataFile, err := stubDataFileHeader[0].Open()
+		if err != nil {
+			http.Error(w, "Cannon open stub data", http.StatusBadRequest)
+			return
+		}
+		defer stubDataFile.Close()
+		stubData = stubDataFile
+
+	}
+
+	err = json.NewDecoder(stubData).Decode(stub)
 	if err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
+	if stub.Name == "" {
+		http.Error(w, "Invalid Name", http.StatusBadRequest)
+		return
+	}
+
+	_, err = url.ParseRequestURI(stub.Request.URL)
+	if err != nil {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+
+	switch stub.Request.Method {
+	case http.MethodGet, http.MethodHead, http.MethodPost, http.MethodPut, http.MethodPatch,
+		http.MethodDelete, http.MethodConnect, http.MethodOptions, http.MethodTrace:
+	default:
+		http.Error(w, "Invalid Method", http.StatusBadRequest)
+		return
+	}
+
+	if stub.Response.Status < 100 || stub.Response.Status > 999 {
+		http.Error(w, "Invalid Status Code", http.StatusBadRequest)
+		return
+	}
+
+	for headerKey := range stub.Request.Headers {
+		if headerKey == "" {
+			http.Error(w, "Invalid Request Headers Data", http.StatusBadRequest)
+			return
+		}
+	}
+	for headerKey := range stub.Response.Headers {
+		if headerKey == "" {
+			http.Error(w, "Invalid Response Headers Data", http.StatusBadRequest)
+			return
+		}
+	}
+
+	if strings.HasPrefix(contentType, "multipart/form-data") {
+		requestBodyFileHeader, ok := r.MultipartForm.File["request-body"]
+		if !ok || len(requestBodyFileHeader) == 0 {
+			if stub.Request.Body != "NULL" {
+				stub.Request.BodyBinary = []byte(stub.Request.Body)
+			}
+		}
+		requestBodyFile, err := requestBodyFileHeader[0].Open()
+		if err != nil {
+			http.Error(w, "Cannon open request body file", http.StatusBadRequest)
+			return
+		}
+		defer requestBodyFile.Close()
+
+		stub.Request.BodyBinary, err = io.ReadAll(requestBodyFile)
+		if err != nil {
+			http.Error(w, "Cannon read request body file", http.StatusBadRequest)
+			return
+		}
+
+		responseBodyFileHeader, ok := r.MultipartForm.File["response-body"]
+		if !ok || len(responseBodyFileHeader) == 0 {
+			if stub.Response.Body != "NULL" {
+				stub.Response.BodyBinary = []byte(stub.Response.Body)
+			}
+		}
+		responseBodyFile, err := responseBodyFileHeader[0].Open()
+		if err != nil {
+			http.Error(w, "Cannon open response body file", http.StatusBadRequest)
+			return
+		}
+		defer responseBodyFile.Close()
+
+		stub.Response.BodyBinary, err = io.ReadAll(responseBodyFile)
+		if err != nil {
+			http.Error(w, "Cannon read response body file", http.StatusBadRequest)
+			return
+		}
+
+	} else {
+		if stub.Request.Body != "NULL" {
+			stub.Request.BodyBinary = []byte(stub.Request.Body)
+		}
+		if stub.Response.Body != "NULL" {
+			stub.Response.BodyBinary = []byte(stub.Response.Body)
+		}
+	}
+
 	h.stubsPtr.Add(stub)
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, "Stub created successfully for %s on %s\n", stub.Name,
-		stub.Request.URL)
+	_, err = fmt.Fprintf(w, "Stub created successfully for %s on %s\n", stub.Name, stub.Request.URL)
+	if err != nil {
+		http.Error(w, "Writing Error", http.StatusInternalServerError)
+	}
 }
 
 type stubHandler struct {
 	stubsPtr *Stubs
 }
 
-func parseRequestBody(r *http.Request) (*string, error) {
-	body, err := (io.ReadAll(r.Body))
+func readRequestBody(r *http.Request) ([]byte, error) {
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
+	defer r.Body.Close() // Важно закрыть тело запроса после чтения
 
-	r.Body = io.NopCloser(bytes.NewReader(body))
-
-	bodyString := string(body)
-
-	return &bodyString, nil
+	return body, nil
 }
 
 // TODO Валидация
-func parseRequestString(r *http.Request) (*string, error) {
-	request := StubRequest{
-		Method: r.Method,
-		URL:    r.URL.String(),
-		//Headers: make(map[string]string),
-	}
-	// Гибкая настройка того, что нужно игнорировать
-	//
-	//for key, values := range r.Header {
-	//	request.Headers[key] = values[0]
-	//}
-	//
-	//    for _, cookie := range r.Cookies() {
-	//        request.Cookie += cookie.String() + "; "
-	//    }
+func readRequest(r *http.Request) (*StubRequest, error) {
+	request := new(StubRequest)
+	request.Method = r.Method
+	request.URL = r.URL.String()
+	request.Headers = make(map[string]string)
 
-	requestBodyPtr, err := parseRequestBody(r)
+	for key, values := range r.Header {
+		request.Headers[key] = values[0]
+	}
+
+	body, err := readRequestBody(r)
 	if err != nil {
 		return nil, err
 	}
-	request.Body = *requestBodyPtr
 
-	requestByte, _ := json.Marshal(request)
-	requestString := string(requestByte)
+	request.BodyBinary = body
 
-	return &requestString, nil
+	return request, nil
 }
 
 func (h *stubHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Наименование функций бы поменять
-	requestString, err := parseRequestString(r)
+	request, err := readRequest(r)
 	if err != nil {
 		http.Error(w, "Invalid Request", http.StatusBadRequest)
 		return
 	}
 
-	stub := h.stubsPtr.Get(requestString)
-	if stub == nil {
+	stubs := h.stubsPtr.Get(request)
+
+	if len(stubs) == 0 {
 		http.Error(w, "Stub not found", http.StatusNotFound)
 		return
 	}
-	// Перепроверить, соотв. ли статус ошибке
+
+	if len(stubs) != 1 {
+		http.Error(w, "Multiple stubs found", http.StatusNotFound)
+		return
+	}
+
+	stub := stubs[0]
 
 	w.WriteHeader(stub.Response.Status)
 	for key, value := range stub.Response.Headers {
 		w.Header().Set(key, value)
 	}
 
-	fmt.Fprintf(w, "%s", stub.Response.Body)
+	_, err = w.Write(stub.Response.BodyBinary)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Lol")
+		http.Error(w, "Writing Error", http.StatusInternalServerError)
+	}
 }
