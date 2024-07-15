@@ -215,18 +215,19 @@ func (h *generateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if stub.Request.Body != "NULL" {
 				stub.Request.BodyBinary = []byte(stub.Request.Body)
 			}
-		}
-		requestBodyFile, err := requestBodyFileHeader[0].Open()
-		if err != nil {
-			http.Error(w, "Cannon open request body file", http.StatusBadRequest)
-			return
-		}
-		defer requestBodyFile.Close()
+		} else {
+			requestBodyFile, err := requestBodyFileHeader[0].Open()
+			if err != nil {
+				http.Error(w, "Cannon open request body file", http.StatusBadRequest)
+				return
+			}
+			defer requestBodyFile.Close()
 
-		stub.Request.BodyBinary, err = io.ReadAll(requestBodyFile)
-		if err != nil {
-			http.Error(w, "Cannon read request body file", http.StatusBadRequest)
-			return
+			stub.Request.BodyBinary, err = io.ReadAll(requestBodyFile)
+			if err != nil {
+				http.Error(w, "Cannon read request body file", http.StatusBadRequest)
+				return
+			}
 		}
 
 		responseBodyFileHeader, ok := r.MultipartForm.File["response-body"]
@@ -234,20 +235,20 @@ func (h *generateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if stub.Response.Body != "NULL" {
 				stub.Response.BodyBinary = []byte(stub.Response.Body)
 			}
-		}
-		responseBodyFile, err := responseBodyFileHeader[0].Open()
-		if err != nil {
-			http.Error(w, "Cannon open response body file", http.StatusBadRequest)
-			return
-		}
-		defer responseBodyFile.Close()
+		} else {
+			responseBodyFile, err := responseBodyFileHeader[0].Open()
+			if err != nil {
+				http.Error(w, "Cannon open response body file", http.StatusBadRequest)
+				return
+			}
+			defer responseBodyFile.Close()
 
-		stub.Response.BodyBinary, err = io.ReadAll(responseBodyFile)
-		if err != nil {
-			http.Error(w, "Cannon read response body file", http.StatusBadRequest)
-			return
+			stub.Response.BodyBinary, err = io.ReadAll(responseBodyFile)
+			if err != nil {
+				http.Error(w, "Cannon read response body file", http.StatusBadRequest)
+				return
+			}
 		}
-
 	} else {
 		if stub.Request.Body != "NULL" {
 			stub.Request.BodyBinary = []byte(stub.Request.Body)
@@ -305,7 +306,7 @@ func (h *stubHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Наименование функций бы поменять
 	request, err := readRequest(r)
 	if err != nil {
-		http.Error(w, "Invalid Request", http.StatusBadRequest)
+		http.Error(w, "Invalid Request", http.StatusNotFound)
 		return
 	}
 
@@ -328,10 +329,11 @@ func (h *stubHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set(key, value)
 	}
 
-	_, err = w.Write(stub.Response.BodyBinary)
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Lol")
-		http.Error(w, "Writing Error", http.StatusInternalServerError)
+	if stub.Response.BodyBinary != nil {
+		_, err = w.Write(stub.Response.BodyBinary)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Writing Error", http.StatusInternalServerError)
+		}
 	}
 }
