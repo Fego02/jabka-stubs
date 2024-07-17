@@ -13,17 +13,17 @@
    ```shell 
    git clone https://github.com/Fego02/jabka-stubs.git
    cd jabka-stubs/server
-```
+   ```
    
 2. Сборка исполняемого файла
    ```shell
    go build -o stub-server.exe src/main.go
-```
+   ```
 
 3. Запуск сервера
    ```shell
    ./stub-server.exe
-```
+   ```
 
 Параметры запуска:
 -address="127.0.0.1"
@@ -34,7 +34,7 @@
 
 #### Создание простой заглушки 
 
-==POST== /generate
+**POST** /generate
 Схема тела запроса: application/json
 
 - **name** 
@@ -56,7 +56,7 @@
 	  *object* 
 	   Шаблоны заголовков для сопоставления в форме : { "": "" }
 	   (опционально)
-- **response
+- **response**
   *object*
   (обязательно)
 	*  **status**
@@ -71,7 +71,7 @@
 	  *object* 
 	   Шаблоны заголовков для сопоставления в форме : { "": "" }  
 	   (опционально)
-- properties (ПОКА НЕ РЕАЛИЗОВАНО)
+- **properties** (ПОКА НЕ РЕАЛИЗОВАНО)
   *object*
   (опционально)
 	- **delay**
@@ -113,7 +113,7 @@ Stub created successfully for Сorrect form for creating a stub on /messages/gre
 
 #### Создание заглушки для работы с файлами
 
-==POST== /generate
+**POST** /generate
 Схема тела запроса: multipart/form-data
 
 | Key                            | Value                                                                               |
