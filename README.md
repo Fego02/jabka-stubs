@@ -85,7 +85,7 @@
 
 ##### Пример запроса создания заглушки
 
-```json
+```
 {
     "name": "Сorrect form for creating a stub",
     "request": {
@@ -135,7 +135,7 @@ Stub created successfully for Сorrect form for creating a stub on /messages/gre
 
 Отправка запроса POST по пути /generate с телом JSON 
 
-```json
+```
 {
     "name": "Just a stub",
     "request": {
