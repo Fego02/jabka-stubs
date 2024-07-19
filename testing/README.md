@@ -19,7 +19,7 @@
 2. Запустить скрипт install-linux.sh
    ```shell
    bash install-linux.sh
-```
+   ```
 
 
 # Тестирование
@@ -30,7 +30,7 @@ http::/localhost:8080
 Для изменения данных параметров требуется поменять значения переменных "address" и "port" в файле test.postman_collection.json
 Переменные "address" и "port" располагаются в поле "variable" в самом низу JSON файла
 
-```json
+```
 "variable": [
         {
             "key": "address",
@@ -44,8 +44,7 @@ http::/localhost:8080
         },
         ...
 ```
-\
-s### Запуск тестирования
+### Запуск тестирования
 
 1. Запустить скрипт create-test-report.sh
    $1 - путь к файлу коллекции (JSON)
@@ -53,6 +52,6 @@ s### Запуск тестирования
    
    ```shell
    bash create-test-report.sh ./test.postman_collection.json test-report.html
-```
+   ```
 
 2.  Открыть получившийся отчет
