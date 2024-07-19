@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Response заглушки с большим возвратным кодом",
+			"name": "Не трехзначный response status код заглушки",
 			"item": [
 				{
 					"name": "С не трехзначным возвратным кодом",
@@ -20,7 +20,9 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(\"Сorrect error message\", function () {\r",
+									"    pm.response.to.have.body(\"Invalid Status Code\\n\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -55,7 +57,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
-						}
+						},
+						"description": "Запрос на создание заглушки с не трехзначным response status кодом.\n\nОжидается, что сервер не позволит создать такую заглушку и вернет 400 код с сообщением \"Invalid Status Code\""
 					},
 					"response": []
 				}
@@ -63,7 +66,7 @@
 			"description": "Проверка создания заглушки с не трехзначным возвратным кодом.  \nОжидается, что сервер не позволит создать такую заглушку и вернет 400 код с сообщением \"Invalid Status Code\"."
 		},
 		{
-			"name": "Response заглушки с отрицательный статус кодом",
+			"name": "Отрицательный response status код заглушки",
 			"item": [
 				{
 					"name": "С отрицательным возвратным кодом",
@@ -76,7 +79,9 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(\"Сorrect error message\", function () {\r",
+									"    pm.response.to.have.body(\"Invalid Status Code\\n\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -111,7 +116,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
-						}
+						},
+						"description": "Запрос создания заглушки с отрицательным возвратным кодом.  \n  \nОжидается, что сервер не позволит создать такую заглушку и вернет 400 код с сообщением \"Invalid Status Code\"."
 					},
 					"response": []
 				}
@@ -231,10 +237,10 @@
 			]
 		},
 		{
-			"name": "Запрос создания заглушки с пустым JSON body",
+			"name": "Пустое тело запроса создания заглушки",
 			"item": [
 				{
-					"name": "С пустым JSON",
+					"name": "С пустым телом",
 					"event": [
 						{
 							"listen": "test",
@@ -247,7 +253,10 @@
 									"pm.test(\"Response time is within an acceptable range\", function () {\r",
 									"  pm.expect(pm.response.responseTime).to.be.below(300);\r",
 									"});\r",
-									""
+									"\r",
+									"pm.test(\"Сorrect error message\", function () {\r",
+									"    pm.response.to.have.body(\"Invalid Content Type\\n\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -282,12 +291,76 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
-						}
+						},
+						"description": "Запрос создания заглушки с пустым телом. Заголовок запроса \"Content-type\" не выставлен.\n\nОжидается, что сервер вернет 400 код с сообщением \"Invalid Content Type\""
 					},
 					"response": []
 				}
 			],
-			"description": "Проверка работы запроса создания заглушки с пустым телом.  \nОжидается, что сервер не позволит создать такую заглушку и вернет 400 код с сообщением \"Invalid Content Type\""
+			"description": "Запрос создания заглушки с пустым телом. Заголовок запроса \"Content-type\" не выставлен.\n\nОжидается, что сервер вернет 400 код с сообщением \"Invalid Content Type\""
+		},
+		{
+			"name": "Некорректный JSON в теле запроса создания заглушки",
+			"item": [
+				{
+					"name": "С некорректным JSON в теле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 400\", function () {\r",
+									"  pm.expect(pm.response.code).to.equal(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is within an acceptable range\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(300);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сorrect error message\", function () {\r",
+									"    pm.response.to.have.body(\"Invalid JSON\\n\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Invalid JSON\",\r\n    \"request\": {\r\n        \"method\": \"GET\";\r\n        \"url\": \"/error-messages\"\r\n    },\r\n    \"response\": {\r\n        \"status\": 202;\r\n        \"body\": \"Request with Invalid JSON\";\r\n        \"headers\": {\r\n            \"Content-Type\": \"text/plain\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}:{{port}}{{generate_path}}",
+							"host": [
+								"{{address}}"
+							],
+							"port": "{{port}}{{generate_path}}"
+						},
+						"description": "Запрос создания заглушки с некорректным JSON в теле. Поставлены знаки \";\" вместо \",\".\n\nОжидается, что сервер вернет 400 код с сообщением \"Invalid JSON\""
+					},
+					"response": []
+				}
+			],
+			"description": "Проверка работы запроса создания заглушки с некорректным JSON в теле.\n\nОжидается, что сервер вернет 400 код с сообщением \"Invalid JSON\""
 		},
 		{
 			"name": "Успешное создание заглушки",
@@ -301,10 +374,10 @@
 								"exec": [
 									"var req = JSON.parse(pm.request.body.raw);\r",
 									"var expected_body = req.response.body;\r",
-									"pm.collectionVariables.set(\"Expected response body\", expected_body);\r",
+									"pm.collectionVariables.set(\"body\", expected_body);\r",
 									"\r",
 									"var expected_status = req.response.status;\r",
-									"pm.collectionVariables.set(\"Expected response status\", expected_status);\r",
+									"pm.collectionVariables.set(\"status\", expected_status);\r",
 									"\r",
 									"var method = req.request.method;\r",
 									"pm.collectionVariables.set(\"METHOD\", method);\r",
@@ -312,10 +385,10 @@
 									"var url = req.request.url;\r",
 									"pm.collectionVariables.set(\"url\", url)\r",
 									"\r",
-									"pm.test(\"Response body is in JSON format\", function () {\r",
-									"    pm.expect(pm.request.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
 									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -351,7 +424,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
-						}
+						},
+						"description": "Корректный запрос создания заглушки.\n\nОжидается, что сервер создаст заглушку и вернет 201 код с сообщением об успешном создании."
 					},
 					"response": []
 				},
@@ -363,25 +437,18 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is equal to expected\", function () {\r",
-									"    const expected_status = pm.collectionVariables.get(\"Expected response status\");\r",
+									"    const expected_status = pm.collectionVariables.get(\"status\");\r",
 									"    pm.response.to.have.status(expected_status);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Response body is equal to expected\", function(){\r",
 									"    const getData = pm.response.text();\r",
-									"    const expected_body = pm.collectionVariables.get(\"Expected response body\");\r",
+									"    const expected_body = pm.collectionVariables.get(\"body\");\r",
 									"    pm.expect(getData).to.equal(expected_body);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Response time is less than 200ms\", function () {\r",
 									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"Response body is not empty\", function () {\r",
-									"    const responseData = pm.response.text();\r",
-									"    \r",
-									"    pm.expect(responseData).to.not.be.empty;\r",
 									"});\r",
 									""
 								],
@@ -418,7 +485,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{url}}"
-						}
+						},
+						"description": "GET запрос для проверки работы заглушки.\n\nОжидается, что будет получен текст \"Hello, World!\" с кодом 202, указанным при создании заглушки."
 					},
 					"response": []
 				}
@@ -428,7 +496,7 @@
 			"name": "Метод отличный от POST при создании заглушки",
 			"item": [
 				{
-					"name": "Forbidden method generate",
+					"name": "Запрещенный метод запроса создания заглушки",
 					"event": [
 						{
 							"listen": "test",
@@ -437,6 +505,10 @@
 									"\r",
 									"pm.test(\"Status code is 405\", function () {\r",
 									"    pm.response.to.have.status(405);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сorrect error message\", function () {\r",
+									"    pm.response.to.have.body(\"Method not allowed\\n\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -472,7 +544,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
-						}
+						},
+						"description": "Отправка запроса с методом DELETE по адресу создания заглушек при ожидаемом методе POST.\n\nОжидается, что сервер вернет 405 с сообщением \"Method not allowed\""
 					},
 					"response": []
 				}
@@ -540,7 +613,7 @@
 							],
 							"port": "{{port}}{{generate_path}}"
 						},
-						"description": "\nThis endpoint allows you to make an HTTP POST request to localhost:8080/generate in order to create a mock. The request body should include the name, request method, request URL, response status, response body, and response headers. The last execution of this request returned a status of 201 with a content type of text/plain, and the response message indicated that the mock was created successfully for a specific item at a particular location.\n"
+						"description": "Запрос создания заглушки с длинным текстовым телом ответа.  \n  \nОжидается, что сервер позволит создать такую заглушку и вернет 201 код с сообщением об успешном создании заглушки."
 					},
 					"response": []
 				},
@@ -601,7 +674,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{url}}"
-						}
+						},
+						"description": "Запрос GET для проверки корректности работы заглушки.  \n  \nОжидается, что вернется текст в полном формате с 200 кодом, указанным при создании заглушки."
 					},
 					"response": []
 				}
@@ -668,7 +742,7 @@
 							],
 							"port": "{{port}}{{generate_path}}"
 						},
-						"description": "\nThis endpoint allows you to make an HTTP POST request to localhost:8080/generate in order to create a mock. The request body should include the name, request method, request URL, response status, response body, and response headers. The last execution of this request returned a status of 201 with a content type of text/plain, and the response message indicated that the mock was created successfully for a specific item at a particular location.\n"
+						"description": "Запрос на создание заглушки на путь, содержащий кириллицу."
 					},
 					"response": []
 				},
@@ -735,8 +809,7 @@
 					},
 					"response": []
 				}
-			],
-			"description": "1. При создании заглушки в поле \"response\" указывается \"url\" с кириллицей\n    \n2. Ожидается, что сервер не даст создать заглушку и вернут 400 код"
+			]
 		},
 		{
 			"name": "Путь без / в начале",
@@ -752,7 +825,7 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response body is equal to expected\", function(){\r",
+									"pm.test(\"Сorrect error message\", function(){\r",
 									"    const getData = pm.response.text();\r",
 									"    const expected_body = \"Invalid URL\\n\";\r",
 									"    pm.expect(getData).to.equal(expected_body);\r",
@@ -792,7 +865,7 @@
 							],
 							"port": "{{port}}{{generate_path}}"
 						},
-						"description": "\nThis endpoint allows you to make an HTTP POST request to localhost:8080/generate in order to create a mock. The request body should include the name, request method, request URL, response status, response body, and response headers. The last execution of this request returned a status of 201 with a content type of text/plain, and the response message indicated that the mock was created successfully for a specific item at a particular location.\n"
+						"description": "Запрос на создание заглушки на путь без \"/\" в начале.  \n  \nОжидается, что сервер не позволит создать заглушку с таким url и вернет сообщение \"Invalid URL\" с кодом 400."
 					},
 					"response": []
 				}
@@ -811,10 +884,10 @@
 								"exec": [
 									"var req = JSON.parse(pm.request.body.raw);\r",
 									"var expected_body = req.response.body;\r",
-									"pm.collectionVariables.set(\"Expected response body\", expected_body);\r",
+									"pm.collectionVariables.set(\"body\", expected_body);\r",
 									"\r",
 									"var expected_status = req.response.status;\r",
-									"pm.collectionVariables.set(\"Expected response status\", expected_status);\r",
+									"pm.collectionVariables.set(\"status\", expected_status);\r",
 									"\r",
 									"var method = req.request.method;\r",
 									"pm.collectionVariables.set(\"METHOD\", method);\r",
@@ -822,10 +895,9 @@
 									"var url = req.request.url;\r",
 									"pm.collectionVariables.set(\"url\", url)\r",
 									"\r",
-									"pm.test(\"Response body is in JSON format\", function () {\r",
-									"    pm.expect(pm.request.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
-									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -862,7 +934,7 @@
 							],
 							"port": "{{port}}{{generate_path}}"
 						},
-						"description": "\nThis endpoint allows you to make an HTTP POST request to localhost:8080/generate in order to create a mock. The request body should include the name, request method, request URL, response status, response body, and response headers. The last execution of this request returned a status of 201 with a content type of text/plain, and the response message indicated that the mock was created successfully for a specific item at a particular location.\n"
+						"description": "Запрос на создение заглушки с дублированием полей \"body\".\n\nОжидается, что сервир позволит создать такую заглушку и вернет 201 код с сообщением об успешном создании.  \n  \nПри этом поведение ответа сервера на запрос неопределенно."
 					},
 					"response": []
 				},
@@ -874,14 +946,8 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is equal to expected\", function () {\r",
-									"    const expected_status = pm.collectionVariables.get(\"Expected response status\");\r",
+									"    const expected_status = pm.collectionVariables.get(\"status\");\r",
 									"    pm.response.to.have.status(expected_status);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response body is equal to expected\", function(){\r",
-									"    const getData = pm.response.text();\r",
-									"    const expected_body = pm.collectionVariables.get(\"Expected response body\");\r",
-									"    pm.expect(getData).to.equal(expected_body);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Response time is less than 200ms\", function () {\r",
@@ -891,7 +957,6 @@
 									"\r",
 									"pm.test(\"Response body is not empty\", function () {\r",
 									"    const responseData = pm.response.text();\r",
-									"    \r",
 									"    pm.expect(responseData).to.not.be.empty;\r",
 									"});\r",
 									""
@@ -929,7 +994,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{url}}"
-						}
+						},
+						"description": "Запрос GET для проверки работы заглушки.\n\nПоведение ответа неопределенно."
 					},
 					"response": []
 				}
@@ -937,7 +1003,7 @@
 			"description": "НЕОПРЕДЕЛЕННОЕ ПОВЕДЕНИЕ"
 		},
 		{
-			"name": "Запрос создания заглушки с несуществующем полем",
+			"name": "Несуществующее поле запроса создания заглушки",
 			"item": [
 				{
 					"name": "С несуществующем полем",
@@ -946,6 +1012,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"var req = JSON.parse(pm.request.body.raw);\r",
+									"var expected_body = req.response.body;\r",
+									"pm.collectionVariables.set(\"body\", expected_body);\r",
+									"\r",
+									"var expected_status = req.response.status;\r",
+									"pm.collectionVariables.set(\"status\", expected_status);\r",
+									"\r",
+									"var method = req.request.method;\r",
+									"pm.collectionVariables.set(\"METHOD\", method);\r",
+									"\r",
+									"var url = req.request.url;\r",
+									"pm.collectionVariables.set(\"url\", url)\r",
+									"\r",
 									"pm.test(\"Status code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
@@ -972,7 +1051,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Non-existent field\",\r\n    \"request\": {\r\n        \"method\": \"GET\",\r\n        \"url\": \"/messages/greeting\"\r\n    },\r\n    \"response\": {\r\n        \"status\": 201,\r\n        \"body\": \"Hello, World!\",\r\n        \"headers\": {\r\n            \"Content-Type\": \"text/plain\"\r\n        }\r\n    },\r\n    \"errors\": {\r\n        \"content\": \"adsad\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"name\": \"Non-existent field\",\r\n    \"request\": {\r\n        \"method\": \"GET\",\r\n        \"url\": \"/cart\"\r\n    },\r\n    \"response\": {\r\n        \"status\": 600,\r\n        \"body\": \"Non-existent product\",\r\n        \"headers\": {\r\n            \"Content-Type\": \"text/plain\"\r\n        }\r\n    },\r\n    \"errors\": {\r\n        \"content\": \"Incorrect DATA\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -985,7 +1064,69 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
+						},
+						"description": "В теле запроса создания заглушки содержится несуществующее поле.  \nОжидается, что сервер создаст заглушку, а неожидаемое поле проигнорируется."
+					},
+					"response": []
+				},
+				{
+					"name": "GET запрос",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is equal to expected\", function () {\r",
+									"    const expected_status = pm.collectionVariables.get(\"status\");\r",
+									"    pm.response.to.have.status(expected_status);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response body is not empty\", function () {\r",
+									"    const responseData = pm.response.text();\r",
+									"    pm.expect(responseData).to.not.be.empty;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
+					],
+					"request": {
+						"method": "{{METHOD}}",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}:{{port}}{{url}}",
+							"host": [
+								"{{address}}"
+							],
+							"port": "{{port}}{{url}}"
+						},
+						"description": "Запрос GET для проверки работы заглушки.\n\nПоведение ответа неопределенно."
 					},
 					"response": []
 				}
@@ -993,10 +1134,10 @@
 			"description": "Тестирование отправки запроса на создание заглушки простого формата с долнительным неожидаемым полем.\n\nОжидается, что сервер позволит создать такую заглушку, а дополнительное поле будет игнорироваться"
 		},
 		{
-			"name": "С методом запроса, написанный строчными буквами",
+			"name": "С методом запроса, написанным строчными буквами",
 			"item": [
 				{
-					"name": "С методом, написанный строчными буквами",
+					"name": "С методом, написанным строчными буквами",
 					"event": [
 						{
 							"listen": "test",
@@ -1006,14 +1147,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response body is equal to expected\", function(){\r",
+									"pm.test(\"Сorrect error message\", function(){\r",
 									"    const getData = pm.response.text();\r",
 									"    pm.expect(getData).to.equal(\"Invalid Method\\n\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response body is in JSON format\", function () {\r",
-									"    pm.expect(pm.request.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
 									"\r",
 									""
 								],
@@ -1050,7 +1188,8 @@
 								"{{address}}"
 							],
 							"port": "{{port}}{{generate_path}}"
-						}
+						},
+						"description": "Запрос на создание заглушки. В поле ожидаемого метода (request method) - метод, написанный строчными буквами\n\nОжидается, что сервер не создаст такую заглушку и вернет 400 код с сообщением \"Invalid Method\""
 					},
 					"response": []
 				}
@@ -2018,6 +2157,176 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Форма только с stub-data",
+			"item": [
+				{
+					"name": "Только stub-data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.collectionVariables.set(\"body\", \"Alone again\");\r",
+									"pm.collectionVariables.set(\"status\", 200);\r",
+									"pm.collectionVariables.set(\"METHOD\", \"GET\");\r",
+									"pm.collectionVariables.set(\"url\", \"/only-one\")\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "stub-data",
+									"type": "file",
+									"src": "postman-cloud:///1ef454e6-c546-42d0-b574-513ee01efa7d"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{address}}:{{port}}{{generate_path}}",
+							"host": [
+								"{{address}}"
+							],
+							"port": "{{port}}{{generate_path}}"
+						},
+						"description": "Запрос на создание заглушки в формате multipart/form-data. В форме есть только stub-data.  \n  \nОжидается, что сервер создат заглушку обычного формата. Поведение заглушку будет определяться stub-data. Ожидаемый ответ - текст."
+					},
+					"response": []
+				},
+				{
+					"name": "GET запрос",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is equal to expected\", function () {\r",
+									"    const expected_status = pm.collectionVariables.get(\"status\");\r",
+									"    pm.response.to.have.status(expected_status);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is equal to expected\", function(){\r",
+									"    const getData = pm.response.text();\r",
+									"    const expected_body = pm.collectionVariables.get(\"body\");\r",
+									"    pm.expect(getData).to.equal(expected_body);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "{{METHOD}}",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{address}}:{{port}}/only-one",
+							"host": [
+								"{{address}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"only-one"
+							]
+						},
+						"description": "GET запрос для проверки работы заглушки.\n\nОжидается, что будет получен текст \"Hello, World!\" с кодом 202, указанным при создании заглушки."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "stub-data отсутствует в форме",
+			"item": [
+				{
+					"name": "Без stub-data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сorrect error message\", function () {\r",
+									"    pm.response.to.have.body(\"Stub data not found\\n\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "variable",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "user",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{address}}:{{port}}{{generate_path}}",
+							"host": [
+								"{{address}}"
+							],
+							"port": "{{port}}{{generate_path}}"
+						},
+						"description": "В запросе создания заглушки в формате multipart/form-data отсутствует stub-data.\n\nОжидается, что сервер вернет 400 с сообщением \"Stub data not found\""
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -2045,7 +2354,7 @@
 	"variable": [
 		{
 			"key": "address",
-			"value": "localhost",
+			"value": "localhost\n",
 			"type": "string"
 		},
 		{
@@ -2100,6 +2409,10 @@
 		},
 		{
 			"key": "russian_url",
+			"value": ""
+		},
+		{
+			"key": "status",
 			"value": ""
 		}
 	]
