@@ -2364,7 +2364,7 @@
 		},
 		{
 			"key": "generate_path",
-			"value": "/generate",
+			"value": "/stubs/http-stubs",
 			"type": "string"
 		},
 		{
