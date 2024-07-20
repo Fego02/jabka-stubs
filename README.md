@@ -17,7 +17,9 @@
    
 2. Сборка исполняемого файла
    ```shell
-   go build -o stub-server.exe src/main.go
+   cd src/
+   go build -o ../stub-server.exe
+   cd ..
    ```
 
 3. Запуск сервера
