@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/Fego02/jabka-stubs/src/stubs/http-stubs"
+	"github.com/Fego02/jabka-stubs/pkg/httpstubs"
 	"net/http"
 	"strconv"
 )

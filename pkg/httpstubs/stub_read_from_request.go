@@ -1,7 +1,7 @@
 package httpstubs
 
 import (
-	"github.com/Fego02/jabka-stubs/src/stubs/utils"
+	"github.com/Fego02/jabka-stubs/pkg/utils"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -35,10 +35,10 @@ func ReaderFromMultiPartFormByKey(form *multipart.Form, key string) (io.Reader, 
 	fileHeader, isFileFound := form.File[key]
 	text, isTextFound := form.Value[key]
 	if (!isFileFound || len(fileHeader) == 0) && !isTextFound {
-		return nil, NewStubPartNotFoundError(key)
+		return nil, NewPartNotFoundError(key)
 	}
 	if isTextFound && isFileFound {
-		return nil, NewStubPartFoundMoreThanOnceError(key)
+		return nil, NewPartFoundMoreThanOnceError(key)
 	}
 
 	if isTextFound {
@@ -54,7 +54,7 @@ func ReaderFromMultiPartFormByKey(form *multipart.Form, key string) (io.Reader, 
 }
 
 func (stub *Stub) readFromComplexRequest(r *http.Request) error {
-	err := r.ParseMultipartForm(maxFileSize)
+	err := r.ParseMultipartForm(MaxPartFileSize)
 
 	if err != nil {
 		return ErrInvalidMultipart
@@ -74,12 +74,12 @@ func (stub *Stub) readFromComplexRequest(r *http.Request) error {
 
 	requestBodyReader, err := ReaderFromMultiPartFormByKey(r.MultipartForm, "request-body")
 	switch err.(type) {
-	case StubPartNotFoundError:
+	case PartNotFoundError:
 	case nil:
 		if closer, ok := requestBodyReader.(io.Closer); ok {
 			defer utils.HandleClose(closer)
 		}
-		stub.Request.BodyBinary, err = io.ReadAll(requestBodyReader)
+		stub.Request.BodyBin, err = io.ReadAll(requestBodyReader)
 		if err != nil {
 			return ErrCannotReadRequestBody
 		}
@@ -89,7 +89,7 @@ func (stub *Stub) readFromComplexRequest(r *http.Request) error {
 
 	responseBodyReader, err := ReaderFromMultiPartFormByKey(r.MultipartForm, "response-body")
 	switch err.(type) {
-	case StubPartNotFoundError:
+	case PartNotFoundError:
 	case nil:
 		if err != nil {
 			return err
@@ -98,7 +98,7 @@ func (stub *Stub) readFromComplexRequest(r *http.Request) error {
 			defer utils.HandleClose(closer)
 		}
 
-		stub.Response.BodyBinary, err = io.ReadAll(responseBodyReader)
+		stub.Response.BodyBin, err = io.ReadAll(responseBodyReader)
 		if err != nil {
 			return ErrCannotReadResponseBody
 		}

@@ -1,9 +1,7 @@
 package httpstubs
 
 import (
-	"bytes"
-	"fmt"
-	"regexp"
+	"net/http"
 	"sync"
 )
 
@@ -31,7 +29,7 @@ func (stubs *Stubs) Add(stub *Stub) int {
 	// Для удобства тестирования; если имя заглушки совпадает, то переписывает
 	// Ломает REST, ну и ладно, зато удобно
 	for index, item := range stubs.Items {
-		if item.Name == stub.Name {
+		if stub.Name != nil && *item.Name == *stub.Name {
 			stubs.Items[index] = stub
 			return index
 		}
@@ -41,62 +39,19 @@ func (stubs *Stubs) Add(stub *Stub) int {
 	return len(stubs.Items) - 1
 }
 
-func (stubs *Stubs) GetMatchingStubsByRequest(request *StubRequest) []*Stub {
+func (stubs *Stubs) GetMatchingStubsByRequest(r *http.Request) []*Stub {
 	stubs.Mutex.RLock()
 	defer stubs.Mutex.RUnlock()
 
 	matchingStubs := make([]*Stub, 0, 10)
 
 	for _, stub := range stubs.Items {
-		if doRequestsMatch(request, &stub.Request) {
+		if stub.Request.Matches(r) {
 			matchingStubs = append(matchingStubs, stub)
 		}
 	}
 
 	return matchingStubs
-}
-
-func doRequestsMatch(request *StubRequest, stubRequest *StubRequest) bool {
-	return doURLsMatch(request.URL, stubRequest.URL, stubRequest.URLMatches) &&
-		doMethodsMatch(request.Method, stubRequest.Method) &&
-		doBodiesMatch(request.BodyBinary, stubRequest.BodyBinary) &&
-		doHeadersMatch(request.Headers, stubRequest.Headers)
-}
-
-func doURLsMatch(requestURL string, stubURL string, stubURLMatches string) bool {
-	if stubURLMatches != "" {
-		re, err := regexp.Compile(stubURLMatches)
-		if err != nil {
-			return false
-		}
-		fmt.Println(re.MatchString(requestURL))
-		return re.MatchString(requestURL)
-
-	}
-
-	return requestURL == stubURL
-}
-
-func doMethodsMatch(requestMethod string, stubMethod string) bool {
-	return requestMethod == stubMethod
-}
-
-func doBodiesMatch(requestBody []byte, stubBody []byte) bool {
-	return stubBody == nil || bytes.Equal(stubBody, requestBody)
-}
-
-func doHeadersMatch(requestHeaders map[string]string, stubHeaders map[string]string) bool {
-	for stubHeaderKey, stubHeaderValue := range stubHeaders {
-		requestHeaderValue, ok := requestHeaders[stubHeaderKey]
-		if !ok {
-			return false
-		}
-
-		if stubHeaderValue != requestHeaderValue {
-			return false
-		}
-	}
-	return true
 }
 
 func (stubs *Stubs) GetById(id int) *Stub {

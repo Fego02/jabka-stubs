@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/Fego02/jabka-stubs/src/stubs/http-stubs"
+	"github.com/Fego02/jabka-stubs/pkg/httpstubs"
 	"net/http"
 	"time"
 )
@@ -11,14 +11,7 @@ type RequestsHandler struct {
 }
 
 func (h *RequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	request := httpstubs.StubRequest{}
-	err := request.ReadFromRequest(r)
-	if err != nil {
-		http.Error(w, "Invalid Request", http.StatusNotFound)
-		return
-	}
-
-	stubs := h.StubsPtr.GetMatchingStubsByRequest(&request)
+	stubs := h.StubsPtr.GetMatchingStubsByRequest(r)
 	if len(stubs) == 0 {
 		http.Error(w, "Stub not found", http.StatusNotFound)
 		return
@@ -29,7 +22,7 @@ func (h *RequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	stub := stubs[0]
-	if err = stub.WriteToResponse(&w); err != nil {
+	if err := stub.Response.WriteToResponse(&w); err != nil {
 		http.Error(w, "Writing Error", http.StatusInternalServerError)
 	}
 	if stub.Properties.Delay != 0 {
