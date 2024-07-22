@@ -1,0 +1,14 @@
+{
+    "name": "Two files for repsonse",
+    "request": {
+        "method": "GET",
+        "url": "/two-files"
+    },
+    "response": {
+        "status": 404,
+        "body": "Files not found",
+        "headers": {
+            "Content-Type": "text/plain"
+        }
+    }
+}
