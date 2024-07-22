@@ -41,10 +41,11 @@ func (stubRequest *StubRequest) Matches(r *http.Request) bool {
 		return false
 	}
 
-	return stubRequest.StubRequestUrl.Matches(url) &&
-		stubRequest.StubRequestMethod.Matches(method) &&
-		stubRequest.StubRequestHeaders.Matches(headers) &&
-		stubRequest.StubRequestBody.Matches(body)
+	a := stubRequest.StubRequestUrl.Matches(url)
+	b := stubRequest.StubRequestMethod.Matches(method)
+	c := stubRequest.StubRequestHeaders.Matches(headers)
+	d := stubRequest.StubRequestBody.Matches(body)
+	return a && b && c && d
 }
 
 func readRequestBody(r *http.Request) ([]byte, error) {
