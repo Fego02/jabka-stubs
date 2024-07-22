@@ -12,8 +12,8 @@ type StubRequestBody struct {
 	BodyTextMatches    *string `json:"body_matches"`
 	BodyTextNotMatches *string `json:"body_not_matches"`
 	BodyBin            []byte  `json:"body_bin"`
-	BodyBinMatches     *string `json:"body_bin_matches"`
-	BodyBinNotMatches  *string `json:"body_bin_not_matches"`
+	BodyHexMatches     *string `json:"body_hex_matches"`
+	BodyHexNotMatches  *string `json:"body_hex_not_matches"`
 }
 
 func (stubRequestBody *StubRequestBody) Matches(body []byte) bool {
@@ -45,16 +45,16 @@ func (stubRequestBody *StubRequestBody) Matches(body []byte) bool {
 	}
 
 	bodyHex := hex.EncodeToString(body)
-	if stubRequestBody.BodyBinMatches != nil {
-		re, err := regexp.Compile(*stubRequestBody.BodyBinMatches)
+	if stubRequestBody.BodyHexMatches != nil {
+		re, err := regexp.Compile(*stubRequestBody.BodyHexMatches)
 		if err != nil {
 			return false
 		}
 		return re.MatchString(bodyHex)
 	}
 
-	if stubRequestBody.BodyBinNotMatches != nil {
-		re, err := regexp.Compile(*stubRequestBody.BodyBinNotMatches)
+	if stubRequestBody.BodyHexNotMatches != nil {
+		re, err := regexp.Compile(*stubRequestBody.BodyHexNotMatches)
 		if err != nil {
 			return false
 		}
@@ -66,7 +66,7 @@ func (stubRequestBody *StubRequestBody) Matches(body []byte) bool {
 
 func (stubRequestBody *StubRequestBody) Validate() error {
 	if utils.ContainAtLeastTwoNotNils(stubRequestBody.BodyText, stubRequestBody.BodyTextMatches, stubRequestBody.BodyTextNotMatches,
-		stubRequestBody.BodyBin, stubRequestBody.BodyBinMatches, stubRequestBody.BodyBinNotMatches) {
+		stubRequestBody.BodyBin, stubRequestBody.BodyHexNotMatches, stubRequestBody.BodyHexMatches) {
 		return ErrRequestBodyOverloaded
 	}
 
@@ -84,15 +84,15 @@ func (stubRequestBody *StubRequestBody) Validate() error {
 		return nil
 	}
 
-	if stubRequestBody.BodyBinMatches != nil {
-		if !utils.IsValidRegex(*stubRequestBody.BodyBinMatches) {
+	if stubRequestBody.BodyHexMatches != nil {
+		if !utils.IsValidRegex(*stubRequestBody.BodyHexMatches) {
 			return ErrInvalidRequestBodyBinMatches
 		}
 		return nil
 	}
 
-	if stubRequestBody.BodyBinNotMatches != nil {
-		if !utils.IsValidRegex(*stubRequestBody.BodyBinNotMatches) {
+	if stubRequestBody.BodyHexNotMatches != nil {
+		if !utils.IsValidRegex(*stubRequestBody.BodyHexNotMatches) {
 			return ErrInvalidRequestBodyBinNotMatches
 		}
 		return nil

@@ -20,12 +20,12 @@ var (
 	ErrInvalidRequestUrlMatches    = errors.New("invalid url_matches regex")
 	ErrInvalidRequestUrlNotMatches = errors.New("invalid url_not_matches regex")
 	ErrRequestBodyOverloaded       = errors.New("request body is overloaded. " +
-		"Only one of 'body', 'body_matches', 'body_bin', 'body_not_matches', 'body_bin_matches' " +
-		"and 'body_bin_not_matches' can be provided")
+		"Only one of 'body', 'body_matches', 'body_bin', 'body_not_matches', 'body_hex_matches' " +
+		"and 'body_hex_not_matches' can be provided")
 	ErrInvalidRequestBodyMatches       = errors.New("invalid body_matches")
 	ErrInvalidRequestBodyNotMatches    = errors.New("invalid body_not_matches")
-	ErrInvalidRequestBodyBinMatches    = errors.New("invalid body_bin_matches")
-	ErrInvalidRequestBodyBinNotMatches = errors.New("invalid body_bin_not_matches")
+	ErrInvalidRequestBodyBinMatches    = errors.New("invalid body_hex_matches")
+	ErrInvalidRequestBodyBinNotMatches = errors.New("invalid body_hex_not_matches")
 	ErrRequestHeadersOverloaded        = errors.New("request headers are overloaded. " +
 		"Header name can be provided only once in 'headers', 'headers_matches' and 'headers_not_matches'")
 	ErrInvalidRequestsHeaderName       = errors.New("invalid request header name")
