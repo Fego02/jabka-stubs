@@ -5,20 +5,19 @@ import (
 	"sync"
 )
 
-// Хотелось бы использовать что-то по типу map[request]response, однако сопоставление настоящего запроса к заглушкам
+// Хотелось бы использовать хэш, однако сопоставление настоящего запроса к заглушкам
 // не предполагает связи один к одному и является комплексной, потому имплементация в виде простого слайса
 
+// Изменен на map, где ключ это id, будут накладки, зато удобно
+
 type Stubs struct {
-	Items []*Stub
-	// Можно было бы обойтись одним, но не знаю, насколько медленее хэш по индексу работает медленее простой индексации
-	IdMap map[int]*Stub
+	Map   map[int]*Stub
 	Mutex sync.RWMutex
 }
 
 func NewStubs() *Stubs {
 	return &Stubs{
-		Items: make([]*Stub, 0, 10),
-		IdMap: make(map[int]*Stub),
+		Map: make(map[int]*Stub, 10),
 	}
 }
 
@@ -26,17 +25,44 @@ func (stubs *Stubs) Add(stub *Stub) int {
 	stubs.Mutex.Lock()
 	defer stubs.Mutex.Unlock()
 
-	// Для удобства тестирования; если имя заглушки совпадает, то переписывает
-	// Ломает REST, ну и ладно, зато удобно
-	for index, item := range stubs.Items {
-		if stub.Name != nil && *item.Name == *stub.Name {
-			stubs.Items[index] = stub
-			return index
+	for id, stubItem := range stubs.Map {
+		if stub.Name != nil && *stubItem.Name == *stub.Name {
+			stubs.Map[id] = stub
+			return id
 		}
 	}
-	stubs.Items = append(stubs.Items, stub)
-	stubs.IdMap[len(stubs.IdMap)+1] = stub
-	return len(stubs.Items) - 1
+	newId := len(stubs.Map) + 1
+	stubs.Map[newId] = stub
+	return newId
+}
+
+func (stubs *Stubs) Put(stub *Stub, id int) bool {
+	stubs.Mutex.Lock()
+	defer stubs.Mutex.Unlock()
+
+	if _, ok := stubs.Map[id]; ok {
+		stubs.Map[id] = stub
+		return true
+	}
+	return false
+}
+
+func (stubs *Stubs) Delete(id int) bool {
+	stubs.Mutex.Lock()
+	defer stubs.Mutex.Unlock()
+
+	if _, ok := stubs.Map[id]; ok {
+		delete(stubs.Map, id)
+		return true
+	}
+	return false
+}
+
+func (stubs *Stubs) GetById(id int) *Stub {
+	stubs.Mutex.RLock()
+	defer stubs.Mutex.RUnlock()
+
+	return stubs.Map[id]
 }
 
 func (stubs *Stubs) GetMatchingStubsByRequest(r *http.Request) []*Stub {
@@ -45,8 +71,8 @@ func (stubs *Stubs) GetMatchingStubsByRequest(r *http.Request) []*Stub {
 
 	matchingStubs := make([]*Stub, 0, 10)
 
-	for _, stub := range stubs.Items {
-		if stub.Request.Matches(r) {
+	for _, stub := range stubs.Map {
+		if stub.Matches(r) {
 			matchingStubs = append(matchingStubs, stub)
 		}
 	}
@@ -54,9 +80,35 @@ func (stubs *Stubs) GetMatchingStubsByRequest(r *http.Request) []*Stub {
 	return matchingStubs
 }
 
-func (stubs *Stubs) GetById(id int) *Stub {
+func (stubs *Stubs) OptimizedGetMatchingStubsByRequest(r *http.Request) []*Stub {
 	stubs.Mutex.RLock()
 	defer stubs.Mutex.RUnlock()
 
-	return stubs.IdMap[id]
+	var priority int
+	isFoundOnce := false
+	matchingStubs := make([]*Stub, 0, 10)
+
+	for _, stub := range stubs.Map {
+		if !isFoundOnce {
+			if stub.Matches(r) {
+				matchingStubs = append(matchingStubs, stub)
+				isFoundOnce = true
+				priority = stub.Properties.Priority
+			}
+		} else {
+			if stub.Properties.Priority > priority {
+				if stub.Matches(r) {
+					matchingStubs = []*Stub{stub}
+					priority = stub.Properties.Priority
+				}
+			} else if stub.Properties.Priority == priority {
+				if stub.Matches(r) {
+					matchingStubs = append(matchingStubs, stub)
+					priority = stub.Properties.Priority
+				}
+			}
+		}
+	}
+
+	return matchingStubs
 }

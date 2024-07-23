@@ -35,17 +35,16 @@ func (stubRequest *StubRequest) Matches(r *http.Request) bool {
 		headers[headerName] = headerValues[0]
 	}
 	headers["Host"] = r.Host
-
 	body, err := readRequestBody(r)
 	if err != nil {
 		return false
 	}
 
-	a := stubRequest.StubRequestUrl.Matches(url)
-	b := stubRequest.StubRequestMethod.Matches(method)
-	c := stubRequest.StubRequestHeaders.Matches(headers)
-	d := stubRequest.StubRequestBody.Matches(body)
-	return a && b && c && d
+	urlMatches := stubRequest.StubRequestUrl.Matches(url)
+	methodMatches := stubRequest.StubRequestMethod.Matches(method)
+	headersMatches := stubRequest.StubRequestHeaders.Matches(headers)
+	bodyMatches := stubRequest.StubRequestBody.Matches(body)
+	return urlMatches && methodMatches && headersMatches && bodyMatches
 }
 
 func readRequestBody(r *http.Request) ([]byte, error) {

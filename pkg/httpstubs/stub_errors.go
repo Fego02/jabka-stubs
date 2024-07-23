@@ -9,8 +9,6 @@ var (
 	ErrInvalidJson             = errors.New("invalid JSON")
 	ErrInvalidContentType      = errors.New("invalid Content Type")
 	ErrInvalidMultipart        = errors.New("invalid multipart")
-	ErrCannotReadRequestBody   = errors.New("cannot read request body file")
-	ErrCannotReadResponseBody  = errors.New("cannot read response body file")
 	ErrRequestMethodOverloaded = errors.New("request method is overloaded. " +
 		"Only one of 'method' and 'methods_list' can be provided")
 	ErrInvalidRequestMethod = errors.New("invalid method")

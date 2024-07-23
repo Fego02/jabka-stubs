@@ -1,6 +1,7 @@
 package httpstubs
 
 import (
+	"fmt"
 	"github.com/Fego02/jabka-stubs/pkg/utils"
 	"regexp"
 )
@@ -68,10 +69,10 @@ func (stubRequestUrl *StubRequestUrl) String() string {
 		return *stubRequestUrl.Url
 	}
 	if stubRequestUrl.UrlMatches != nil {
-		return *stubRequestUrl.UrlMatches
+		return fmt.Sprintf("url matching regex: %s", *stubRequestUrl.UrlMatches)
 	}
 	if stubRequestUrl.UrlNotMatches != nil {
-		return *stubRequestUrl.UrlNotMatches
+		return fmt.Sprintf("url not matching regex: %s", *stubRequestUrl.UrlMatches)
 	}
-	return "any url"
+	return AnyUrlString
 }
