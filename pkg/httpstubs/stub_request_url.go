@@ -72,7 +72,7 @@ func (stubRequestUrl *StubRequestUrl) String() string {
 		return fmt.Sprintf("url matching regex: %s", *stubRequestUrl.UrlMatches)
 	}
 	if stubRequestUrl.UrlNotMatches != nil {
-		return fmt.Sprintf("url not matching regex: %s", *stubRequestUrl.UrlMatches)
+		return fmt.Sprintf("url not matching regex: %s", *stubRequestUrl.UrlNotMatches)
 	}
 	return AnyUrlString
 }
