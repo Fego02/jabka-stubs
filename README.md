@@ -12,14 +12,12 @@
 1. Клонирование репозитория 
    ```shell 
    git clone https://github.com/Fego02/jabka-stubs.git
-   cd jabka-stubs/server
    ```
    
 2. Сборка исполняемого файла
    ```shell
-   cd src/
-   go build -o ../stub-server.exe
-   cd ..
+   cd jabka-stubs/cmd/stub-server
+   go build -o stub-server.exe
    ```
 
 3. Запуск сервера
@@ -30,6 +28,8 @@
 Параметры запуска:
 -address="127.0.0.1"
 -port="8080"
+-log="" (по стандарту записывает в stdout, если указать "none", то отключается, иначе воспринимается как путь к файлу)
+-log_for_matched_only=true (отключает журналирование для запросов, для которых не нашлась ни одна заглушка)
 
 
 # Использование
