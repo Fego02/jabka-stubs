@@ -18,7 +18,7 @@ type Stub struct {
 func NewStub() *Stub {
 	return &Stub{
 		Request:    StubRequest{},
-		Response:   StubResponse{},
+		Response:   StubResponse{Status: 200},
 		Properties: StubProperties{IsLoggingEnabled: true, Delay: 0},
 	}
 }

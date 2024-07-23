@@ -25,4 +25,6 @@ func (h *StubsGetHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	LogWithRequestDetails(LevelStubsOperations, r,
+		"stubs get:success", "status", http.StatusOK)
 }
