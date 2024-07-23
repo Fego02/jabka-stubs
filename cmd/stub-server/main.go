@@ -21,7 +21,7 @@ func main() {
 	logFileName := flag.String("log", "", "path to log file or none to disable logging")
 	logForMatchedOnly := flag.Bool("log_for_matched_only", true, "log only for matched requests")
 	flag.Parse()
-	
+
 	switch *logFileName {
 	case "":
 	case "none":

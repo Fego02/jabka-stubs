@@ -40,11 +40,8 @@ func (stubRequest *StubRequest) Matches(r *http.Request) bool {
 		return false
 	}
 
-	urlMatches := stubRequest.StubRequestUrl.Matches(url)
-	methodMatches := stubRequest.StubRequestMethod.Matches(method)
-	headersMatches := stubRequest.StubRequestHeaders.Matches(headers)
-	bodyMatches := stubRequest.StubRequestBody.Matches(body)
-	return urlMatches && methodMatches && headersMatches && bodyMatches
+	return stubRequest.StubRequestUrl.Matches(url) && stubRequest.StubRequestMethod.Matches(method) &&
+		stubRequest.StubRequestHeaders.Matches(headers) && stubRequest.StubRequestBody.Matches(body)
 }
 
 func readRequestBody(r *http.Request) ([]byte, error) {
