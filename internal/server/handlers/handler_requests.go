@@ -30,12 +30,17 @@ func (h *RequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	stub := stubs[0]
 	if err := stub.Serve(r, &w); err != nil {
 		http.Error(w, utils.CapitalizeFirstLetter(err.Error()), http.StatusBadRequest)
-		LogWithRequestDetails(LevelMatchedRequests, r,
-			"request matched stub but ended in error", "error", err.Error(),
-			"match time", matchTime, "status", http.StatusBadRequest)
+		if stub.Properties.IsLoggingEnabled {
+			LogWithRequestDetails(LevelMatchedRequests, r,
+				"request matched stub but ended in error", "error", err.Error(),
+				"match time", matchTime, "status", http.StatusBadRequest)
+		}
+
 		return
 	}
-	LogWithRequestDetails(LevelMatchedRequests, r,
-		"request matched stub", "match time", matchTime, "stub name", stub.GetName(),
-		"status", stub.Response.Status)
+	if stub.Properties.IsLoggingEnabled {
+		LogWithRequestDetails(LevelMatchedRequests, r,
+			"request matched stub", "match time", matchTime, "stub name", stub.GetName(),
+			"status", stub.Response.Status)
+	}
 }

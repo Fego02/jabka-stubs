@@ -30,16 +30,12 @@ func (h *StubsPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if err = writeResponseBody(response, &w); err != nil {
 		ErrWritingResponse.HttpError(&w)
-		if stub.Properties.IsLoggingEnabled {
-			LogWithRequestDetails(LevelStubsOperations, r,
-				"stubs post: cannot write response body", "status", ErrWritingResponse.Status)
-		}
+		LogWithRequestDetails(LevelStubsOperations, r,
+			"stubs post: cannot write response body", "status", ErrWritingResponse.Status)
 		return
 	}
-	if stub.Properties.IsLoggingEnabled {
-		LogWithRequestDetails(LevelStubsOperations, r,
-			"stubs post: success", "response", response, "status", http.StatusCreated)
-	}
+	LogWithRequestDetails(LevelStubsOperations, r,
+		"stubs post: success", "response", response, "status", http.StatusCreated)
 }
 
 func getStubFromRequest(r *http.Request) (*httpstubs.Stub, error) {
