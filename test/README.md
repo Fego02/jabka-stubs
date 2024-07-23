@@ -27,21 +27,33 @@
 Тестирование по умолчанию проходит по локальному адресу с портом 8080
 http::/localhost:8080
 
-Для изменения данных параметров требуется поменять значения переменных "address" и "port" в файле test.postman_collection.json
-Переменные "address" и "port" располагаются в поле "variable" в самом низу JSON файла
+Для изменения данных параметров требуется поменять значения переменных "address" и "port" в файле коллекции тестов (содержит postman_collection в названии).
+Переменные "address" и "port" располагаются в поле "variable" в самом низу JSON файла.
+
+При работе с коллекцией "test-files-relative-path.postman_collection.json" необходимо указать абсолютный путь до папки jabka-stubs/test/test-files в переменной "test-files_path" в файле коллекции. Переменная "test-files_path" располагается в поле "variable" в самом низу JSON файла.
 
 ```
 "variable": [
         {
-            "key": "address",
-            "value": "localhost",
-            "type": "string"
-        },
-        {
-            "key": "port",
-            "value": "8080",
-            "type": "string"
-        },
+		"key": "address",
+		"value": "localhost",
+		"type": "string"
+	},
+	{
+		"key": "port",
+		"value": "8080",
+		"type": "string"
+	},
+	{
+		"key": "generate_path",
+		"value": "/stubs/http-stubs",
+		"type": "string"
+	},
+	{
+		"key": "test-files_path",
+		"value": "/home/user/jabka/jabka-stubs/test/test-files",
+		"type": "string"
+	},
         ...
 ```
 ### Запуск тестирования
