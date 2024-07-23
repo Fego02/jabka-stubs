@@ -62,7 +62,7 @@ func (stubRequestHeaders *StubRequestHeaders) Validate() error {
 			return ErrRequestHeadersOverloaded
 		}
 		headerNames[headerName] = struct{}{}
-		if headerName == "" {
+		if headerName == "" || utils.IsFirstLetterLower(headerName) {
 			return ErrInvalidRequestsHeaderName
 		}
 	}
@@ -72,7 +72,7 @@ func (stubRequestHeaders *StubRequestHeaders) Validate() error {
 			return ErrRequestHeadersOverloaded
 		}
 		headerNames[headerName] = struct{}{}
-		if headerName == "" {
+		if headerName == "" || utils.IsFirstLetterLower(headerName) {
 			return ErrInvalidRequestsHeaderName
 		}
 		if !utils.IsValidRegex(headerValue) {
@@ -85,7 +85,7 @@ func (stubRequestHeaders *StubRequestHeaders) Validate() error {
 			return ErrRequestHeadersOverloaded
 		}
 		headerNames[headerName] = struct{}{}
-		if headerName == "" {
+		if headerName == "" || utils.IsFirstLetterLower(headerName) {
 			return ErrInvalidRequestsHeaderName
 		}
 		if !utils.IsValidRegex(headerValue) {
