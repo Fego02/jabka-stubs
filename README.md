@@ -128,7 +128,7 @@ Location: /stubs/http-stubs/1
 
 Изменить заглушку можно с помощью запроса создания с указанием того же имени - "Just a stub"
 
-Отправка запроса POST по пути /generate с телом JSON 
+Отправка запроса POST по пути /stubs/http-stubs с телом JSON 
 
 ```
 {
@@ -152,31 +152,51 @@ Location: /stubs/http-stubs/1
 Stub created successfully for Just a stub on /examples
 
 
-
-
-
-####  Удаление заглушки по id
+#### Удаление заглушки по id
 Удаление заглушки осуществляется **DELETE** запросом на адрес ресурса заглушки, который выдается при создании в заголовке **Location**
 Location: /stubs/http-stubs/1
 
 Пример запроса удаления
-curl -X DELETE {addresss}:{port}/stubs/http-stubs/{id}
+```
+	curl -X DELETE {addresss}:{port}/stubs/http-stubs/{id}
+```
+
 В случае успеха статус 200
 В случае, если id не является числом статус 400
 В случае, если не найдена заглушка статус 404
 
-####  Удаление всех заглушек
+
+#### Обновить заглушку по id
+Обновить заглушку можно **PUT** запросом на {addresss}:{port}/stubs/http-stubs/{id}
+
+
+#### Удаление всех заглушек
+
 Удаление заглушки осуществляется **DELETE** запросом на {addresss}:{port}/stubs/http-stubs
 
 Пример запроса удаления
+```
 curl -X DELETE {addresss}:{port}/stubs/http-stubs
+```
+
 В случае успеха статус 200
 
-####  Получить данные о заглушке
+
+#### Получить данные о заглушке
 Получение заглушки осуществляется **GET** запросом на {addresss}:{port}/stubs/http-stubs/{id}
+
+Пример запроса
+```
+curl -X GET {addresss}:{port}/stubs/http-stubs/{id}
+```
+
 
 #### Получить данные о всех заглушках
 Получение всех заглушек осуществляется **GET** запросом на {addresss}:{port}/stubs/http-stubs
 
-#### Обновить заглушку по id
-Обновить заглушку можно **PUT** запросом на {addresss}:{port}/stubs/http-stubs/{id}
+Пример запроса
+```
+curl -X GET {addresss}:{port}/stubs/http-stubs
+```
+
+
