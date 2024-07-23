@@ -614,7 +614,7 @@
 						}
 					],
 					"request": {
-						"method": "DELETE",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -632,12 +632,12 @@
 							],
 							"port": "{{port}}{{generate_path}}"
 						},
-						"description": "Отправка запроса с методом DELETE по адресу создания заглушек при ожидаемом методе POST.\n\nОжидается, что сервер вернет 405 с сообщением \"Method not allowed\""
+						"description": "Отправка запроса с методом PUT по адресу создания заглушек при ожидаемых методах POST, DELETE, GET.\n\nОжидается, что сервер вернет 405 с сообщением \"Method not allowed\""
 					},
 					"response": []
 				}
 			],
-			"description": "Проверка отправки запроса по адресу создания заглушек с методом отличным от POST.  \nОжидается, что сервер вернет 405 код с сообщением \"Method not allowed\"."
+			"description": "Проверка отправки запроса по адресу создания заглушек с методом отличным от POST, DELETE, GET  \nОжидается, что сервер вернет 405 код с сообщением \"Method not allowed\"."
 		},
 		{
 			"name": "Заглушка с длинным текстовым body",
@@ -914,7 +914,7 @@
 									"\r",
 									"pm.test(\"Сorrect error message\", function(){\r",
 									"    const getData = pm.response.text();\r",
-									"    const expected_body = \"Invalid URL\\n\";\r",
+									"    const expected_body = \"Invalid url\\n\";\r",
 									"    pm.expect(getData).to.equal(expected_body);\r",
 									"});"
 								],
@@ -2207,7 +2207,7 @@
 								{
 									"key": "response-body",
 									"type": "file",
-									"src": "/D:/Stub/jabka-stubs/testing/test-files/frog_with_hearts.jpg"
+									"src": "/{{test-files_path}}/frog_with_hearts.jpg"
 								}
 							]
 						},
@@ -2297,8 +2297,8 @@
 							"formdata": [
 								{
 									"key": "stub-data",
-									"type": "file",
-									"src": "postman-cloud:///1ef454e6-c546-42d0-b574-513ee01efa7d"
+									"value": "{\n    \"name\": \"Only stub-data\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/only-one\"\n    },\n    \"response\": {\n        \"status\": 200,\n        \"body\": \"Alone again\",\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
+									"type": "text"
 								}
 							]
 						},
@@ -2394,7 +2394,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Сorrect error message\", function () {\r",
-									"    pm.response.to.have.body(\"Stub data not found\\n\");\r",
+									"    pm.response.to.have.body(\"Part stub-data not found\\n\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2446,15 +2446,15 @@
 							"formdata": [
 								{
 									"key": "stub-data",
-									"value": "{\n    \"name\": \"Two files for repsonse\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/two-files\"\n    },\n    \"response\": {\n        \"status\": 200,\n        \"body\": \"Files not found\",\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
+									"value": "{\n    \"name\": \"Two files for repsonse\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/two-files\"\n    },\n    \"response\": {\n        \"status\": 200,\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
 									"type": "text"
 								},
 								{
 									"key": "response-body",
 									"type": "file",
 									"src": [
-										"/D:/Stub/jabka-stubs/testing/test-files/frog_art.webp",
-										"/D:/Stub/jabka-stubs/testing/test-files/frog_pot.jpg"
+										"/{{test-files_path}}/frog_pot.jpg",
+										"/{{test-files_path}}/frog_with_hearts.jpg"
 									]
 								}
 							]
@@ -2573,7 +2573,7 @@
 								{
 									"key": "my-photo\n",
 									"type": "file",
-									"src": "/D:/Stub/jabka-stubs/testing/test-files/frog_art.webp"
+									"src": "/{{test-files_path}}/frog_art.webp"
 								}
 							]
 						},
@@ -2628,53 +2628,9 @@
 								{
 									"key": "request-body",
 									"type": "file",
-									"src": "/D:/Stub/jabka-stubs/testing/test-files/frog_painting.webp"
+									"src": "/{{test-files_path}}/frog_art.webp"
 								}
 							]
-						},
-						"url": {
-							"raw": "{{address}}:{{port}}{{generate_path}}",
-							"host": [
-								"{{address}}"
-							],
-							"port": "{{port}}{{generate_path}}"
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "C POST Copy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"body\", \"File is uploaded\");\r",
-									"pm.collectionVariables.set(\"status\", 201);\r",
-									"pm.collectionVariables.set(\"METHOD\", \"POST\");\r",
-									"pm.collectionVariables.set(\"url\", \"/user-ivan\")\r",
-									"\r",
-									"\r",
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Check photo\",\r\n    \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"/vanya\"\r\n    },\r\n    \"response\": {\r\n        \"status\": 201,\r\n        \"body\": \"File is uploaded\",\r\n        \"headers\": {\r\n            \"Content-Type\": \"text/plain\"\r\n        }\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
 						},
 						"url": {
 							"raw": "{{address}}:{{port}}{{generate_path}}",
@@ -2719,7 +2675,7 @@
 						"body": {
 							"mode": "file",
 							"file": {
-								"src": "/D:/Stub/jabka-stubs/testing/test-files/frog_painting.webp"
+								"src": "/{{test-files_path}}/frog_art.webp"
 							}
 						},
 						"url": {
@@ -3195,13 +3151,13 @@
 							"formdata": [
 								{
 									"key": "stub-data",
-									"value": "{\n    \"name\": \"XML storage\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/storage\",\n        \"headers\": {\n            \"Content-Type\": \"text/xml\"\n        }\n    },\n    \"response\": {\n        \"status\": 201,\n        \"body\": \"XML response\",\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
+									"value": "{\n    \"name\": \"XML storage\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/storage\",\n        \"headers\": {\n            \"Content-Type\": \"text/xml\"\n        }\n    },\n    \"response\": {\n        \"status\": 201,\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
 									"type": "text"
 								},
 								{
 									"key": "response-body",
 									"type": "file",
-									"src": "/D:/Stub/jabka-stubs/testing/test-files/book_storage.xml"
+									"src": "/{{test-files_path}}/book_storage.xml"
 								}
 							]
 						},
@@ -3261,13 +3217,13 @@
 							"formdata": [
 								{
 									"key": "stub-data",
-									"value": "{\n    \"name\": \"HTML storage\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/storage\",\n        \"headers_not_matches\": {\n            \"Content-Type\": \"text/xml\"\n        }\n    },\n    \"response\": {\n        \"status\": 200,\n        \"body\": \"HTML response\",\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
+									"value": "{\n    \"name\": \"HTML storage\",\n    \"request\": {\n        \"method\": \"GET\",\n        \"url\": \"/storage\",\n        \"headers_not_matches\": {\n            \"Content-Type\": \"text/xml\"\n        }\n    },\n    \"response\": {\n        \"status\": 200,\n        \"headers\": {\n            \"Content-Type\": \"text/plain\"\n        }\n    }\n}",
 									"type": "text"
 								},
 								{
 									"key": "response-body",
 									"type": "file",
-									"src": "/D:/Stub/jabka-stubs/testing/test-files/book_storage.html"
+									"src": "/{{test-files_path}}/book_storage.html"
 								}
 							]
 						},
@@ -3472,7 +3428,7 @@
 		},
 		{
 			"key": "port",
-			"value": "8080",
+			"value": "55555",
 			"type": "string"
 		},
 		{
