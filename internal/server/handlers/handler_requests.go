@@ -13,7 +13,16 @@ type RequestsHandler struct {
 
 func (h *RequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	startMatch := time.Now()
-	stubs := h.StubsPtr.OptimizedGetMatchingStubsByRequest(r)
+
+	req := httpstubs.MyRequest{}
+	if err := req.Read(r); err != nil {
+		ErrCannotReadRequest.HttpError(&w)
+		LogWithRequestDetails(LevelNonMatchedRequests, r,
+			"cannot read request", "status", ErrCannotReadRequest.Status)
+		return
+	}
+
+	stubs := h.StubsPtr.OptimizedGetMatchingStubsByRequest(&req)
 	matchTime := time.Since(startMatch)
 	if len(stubs) == 0 {
 		ErrStubNotFound.HttpError(&w)

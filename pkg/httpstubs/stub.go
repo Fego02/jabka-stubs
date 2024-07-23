@@ -23,7 +23,7 @@ func NewStub() *Stub {
 	}
 }
 
-func (stub *Stub) Matches(r *http.Request) bool {
+func (stub *Stub) Matches(r *MyRequest) bool {
 	return stub.Request.Matches(r)
 }
 

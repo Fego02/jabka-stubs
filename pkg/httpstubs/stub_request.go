@@ -1,11 +1,5 @@
 package httpstubs
 
-import (
-	"github.com/Fego02/jabka-stubs/pkg/utils"
-	"io"
-	"net/http"
-)
-
 type StubRequest struct {
 	StubRequestUrl
 	StubRequestMethod
@@ -27,29 +21,7 @@ func (stubRequest *StubRequest) Validate() error {
 	return stubRequest.StubRequestHeaders.Validate()
 }
 
-func (stubRequest *StubRequest) Matches(r *http.Request) bool {
-	url := r.URL.String()
-	method := r.Method
-	headers := make(map[string]string)
-	for headerName, headerValues := range r.Header {
-		headers[headerName] = headerValues[0]
-	}
-	headers["Host"] = r.Host
-	body, err := readRequestBody(r)
-	if err != nil {
-		return false
-	}
-
-	return stubRequest.StubRequestUrl.Matches(url) && stubRequest.StubRequestMethod.Matches(method) &&
-		stubRequest.StubRequestHeaders.Matches(headers) && stubRequest.StubRequestBody.Matches(body)
-}
-
-func readRequestBody(r *http.Request) ([]byte, error) {
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return nil, ErrCannotReadHTTPRequestBody
-	}
-	defer utils.HandleClose(r.Body)
-
-	return body, nil
+func (stubRequest *StubRequest) Matches(r *MyRequest) bool {
+	return stubRequest.StubRequestUrl.Matches(r.Url) && stubRequest.StubRequestMethod.Matches(r.Method) &&
+		stubRequest.StubRequestHeaders.Matches(r.Headers) && stubRequest.StubRequestBody.Matches(r.Body)
 }

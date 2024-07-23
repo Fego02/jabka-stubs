@@ -1,7 +1,6 @@
 package httpstubs
 
 import (
-	"net/http"
 	"sync"
 )
 
@@ -65,7 +64,7 @@ func (stubs *Stubs) GetById(id int) *Stub {
 	return stubs.Map[id]
 }
 
-func (stubs *Stubs) GetMatchingStubsByRequest(r *http.Request) []*Stub {
+func (stubs *Stubs) GetMatchingStubsByRequest(r *MyRequest) []*Stub {
 	stubs.Mutex.RLock()
 	defer stubs.Mutex.RUnlock()
 
@@ -80,7 +79,7 @@ func (stubs *Stubs) GetMatchingStubsByRequest(r *http.Request) []*Stub {
 	return matchingStubs
 }
 
-func (stubs *Stubs) OptimizedGetMatchingStubsByRequest(r *http.Request) []*Stub {
+func (stubs *Stubs) OptimizedGetMatchingStubsByRequest(r *MyRequest) []*Stub {
 	stubs.Mutex.RLock()
 	defer stubs.Mutex.RUnlock()
 

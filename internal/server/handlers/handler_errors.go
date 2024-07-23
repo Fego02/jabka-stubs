@@ -13,6 +13,7 @@ var (
 	ErrWritingResponse    = NewHandlerError("Failed to Write Response", http.StatusInternalServerError)
 	ErrStubNotFound       = NewHandlerError("Stub not found", http.StatusNotFound)
 	ErrMultipleStubsFound = NewHandlerError("Multiple stubs found", http.StatusForbidden)
+	ErrCannotReadRequest  = NewHandlerError("Cannot Read Request", http.StatusInternalServerError)
 )
 
 type HandlerError struct {
